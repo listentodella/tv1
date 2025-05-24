@@ -88,8 +88,61 @@ fn cmd_return_this_error(num: u8) -> Result<String, MyError> {
     }
 }
 
+#[derive(Debug)]
+struct MyTauriState {
+    info: String,
+    val: usize,
+}
+#[derive(serde::Serialize)]
+struct CustomResponse {
+    message: String,
+    other_val: usize,
+}
+
+async fn some_function() -> Option<String> {
+    Some("response".into())
+}
+// 异步命令使用 async_runtime::spawn 在单线程上执行, 但命令本身的函数只需要用async 关键字标记即可, 非常简单
+// 不带 async 关键字的命令将在主线程上执行，除非使用 #[tauri::command(async)] 定义
+#[tauri::command]
+async fn my_async_custom_command(
+    app_handle: tauri::AppHandle, //获取app的句柄
+    window: tauri::Window,        //获取该命令被调用时所在的window
+    number: usize,
+    my_tauri_state: tauri::State<'_, MyTauriState>, // 获取tauri的状态
+) -> Result<CustomResponse, String> {
+    println!("Called from window {}", window.label());
+    println!("tauri state is {:?}", my_tauri_state);
+
+    // 获取app的路径
+    let app_dir = app_handle.path_resolver().app_data_dir();
+    println!("app dir is {:?}", app_dir);
+    // 监听全局快捷键
+    use tauri::GlobalShortcutManager;
+    let _ = app_handle
+        .global_shortcut_manager()
+        // 注册快捷键, 并绑定一个回调函数
+        .register("CTRL + U", move || println!("CTRL + U pressed"))
+        .map_err(|e| println!("Error registering shortcut: {}", e));
+
+    let ret = some_function().await;
+    if let Some(message) = ret {
+        Ok(CustomResponse {
+            message: message + " " + &my_tauri_state.info,
+            other_val: number + my_tauri_state.val,
+        })
+    } else {
+        Err("Error occurred".into())
+    }
+}
+
 fn main() {
     tauri::Builder::default()
+        // 这个manage是非常重要的, 否则 命令上无法使用 tauri::State
+        .manage(MyTauriState {
+            info: "Tauri State Info".into(),
+            val: 100,
+        })
         //这里是个vector形式的写法, 而不是多次链式调用 invoke_handler
         .invoke_handler(tauri::generate_handler![
             greet,
@@ -99,7 +152,8 @@ fn main() {
             cmd_return_string,
             cmd_return_result,
             cmd_return_map_err,
-            cmd_return_this_error
+            cmd_return_this_error,
+            my_async_custom_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

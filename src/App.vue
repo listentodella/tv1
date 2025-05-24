@@ -45,6 +45,25 @@ invoke("cmd_return_this_error", { num: 2 })
   .then((msg) => { console.log(msg) })
   .catch((err) => { console.error(err) })
 
+// 尽管rust侧的函数入参实际更复杂:
+// my_custom_command(
+//     app_handle: tauri::AppHandle,
+//     window: tauri::Window,
+//     number: usize,
+//     my_tauri_state: tauri::State<'_, MyTauriState>,
+// 但是tauri::{AppHandle, Window, State} 这两个参数会被自动注入?
+// 所以只需要传入 number 参数即可
+invoke("my_async_custom_command", { number: 10 })
+  // 返回值直接打印即可
+  // 但是也可以将值取出, 这样方便后续提取另作他用
+  .then((ret) => {
+    console.log(ret);
+    let message = ret.message;
+    let val = ret.other_val;
+    console.warn(message);
+    console.warn(val);
+  })
+  .catch((err) => { console.error(err) })
 
 
 
