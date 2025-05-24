@@ -19,6 +19,35 @@ invoke("cmd_string_arg_snake_case", { invoke_message: "snake_hello" })
 // 同样要求返回值类型实现 serde::Serialize
 invoke("cmd_return_string").then((msg) => console.log(msg));
 
+// rust侧返回的结果是 Result<T, E> 类型
+// 如果 ok 为 true, msg 就是 T, 如果 ok 为 false, msg 就是 E
+invoke("cmd_return_result", { ok: true })
+  .then((msg) => { console.log(msg) })
+  .catch((err) => { console.error(err) })
+invoke("cmd_return_result", { ok: false })
+  .then((msg) => { console.log(msg) })
+  .catch((err) => { console.error(err) })
+
+invoke("cmd_return_map_err", { ok: true })
+  .then((msg) => { console.log(msg) })
+  .catch((err) => { console.error(err) })
+invoke("cmd_return_map_err", { ok: false })
+  .then((msg) => { console.log(msg) })
+  .catch((err) => { console.error(err) })
+
+invoke("cmd_return_this_error", { num: 0 })
+  .then((msg) => { console.log(msg) })
+  .catch((err) => { console.error(err) })
+invoke("cmd_return_this_error", { num: 1 })
+  .then((msg) => { console.log(msg) })
+  .catch((err) => { console.error(err) })
+invoke("cmd_return_this_error", { num: 2 })
+  .then((msg) => { console.log(msg) })
+  .catch((err) => { console.error(err) })
+
+
+
+
 async function greet() {
   // Learn more about Tauri commands at https://v1.tauri.app/v1/guides/features/command
   greetMsg.value = await invoke("greet", { name: name.value });
