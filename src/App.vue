@@ -76,19 +76,15 @@ async function greet() {
 <template>
   <main class="container">
     <h1>Tauri + Vue</h1>
-
     <div class="row">
-      <a href="https://vite.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-      <a href="https://tauri.app" target="_blank">
+      <a href="https://v1.tauri.app/zh-cn/v1/guides/getting-started/setup" target="_blank">
         <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
       </a>
-      <a href="https://vuejs.org/" target="_blank">
+      <a href="https://cn.vuejs.org/guide/introduction.html" target="_blank">
         <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
     </div>
-    <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
+    <p>Click Tauri or Vue logos for tutorials</p>
 
     <form class="row" @submit.prevent="greet">
       <input id="greet-input" v-model="name" placeholder="Enter a name..." />
@@ -99,10 +95,6 @@ async function greet() {
 </template>
 
 <style scoped>
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
-}
-
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #249b73);
 }
@@ -134,7 +126,7 @@ async function greet() {
 }
 
 .logo {
-  height: 6em;
+  height: 3em;
   padding: 1.5em;
   will-change: filter;
   transition: 0.75s;
