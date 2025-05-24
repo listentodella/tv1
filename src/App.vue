@@ -1,9 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
+// 这是调用 rust 代码必须得导入
 import { invoke } from "@tauri-apps/api/tauri";
 
 const greetMsg = ref("");
 const name = ref("");
+
+// 直接调用即可, 但是结果是在rust侧查看, 而不是vue侧
+invoke("cmd_no_args")
+// 参数应该带有驼峰式风格的 JSON 对象 传递
+// 参数可以是任何类型, 只要它们实现了 serde::Deserialize 即可
+invoke("cmd_string_arg", { invokeMessage: "Hello!" })
+
+// snake case 风格的传递, rust侧必须用相应的宏修饰
+invoke("cmd_string_arg_snake_case", { invoke_message: "snake_hello" })
+
+// rust侧可以返回值到vue侧
+// 同样要求返回值类型实现 serde::Serialize
+invoke("cmd_return_string").then((msg) => console.log(msg));
 
 async function greet() {
   // Learn more about Tauri commands at https://v1.tauri.app/v1/guides/features/command
@@ -13,7 +27,7 @@ async function greet() {
 
 <template>
   <main class="container">
-    <h1>Welcome to Tauri + Vue</h1>
+    <h1>Tauri + Vue</h1>
 
     <div class="row">
       <a href="https://vite.dev" target="_blank">
@@ -44,7 +58,6 @@ async function greet() {
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #249b73);
 }
-
 </style>
 <style>
 :root {
@@ -123,6 +136,7 @@ button {
 button:hover {
   border-color: #396cd8;
 }
+
 button:active {
   border-color: #396cd8;
   background-color: #e8e8e8;
@@ -152,9 +166,9 @@ button {
     color: #ffffff;
     background-color: #0f0f0f98;
   }
+
   button:active {
     background-color: #0f0f0f69;
   }
 }
-
 </style>
