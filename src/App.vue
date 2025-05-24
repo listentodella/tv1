@@ -3,6 +3,16 @@ import { ref } from "vue";
 // 这是调用 rust 代码必须得导入
 import { invoke } from "@tauri-apps/api/tauri";
 
+import Person from "./components/Person.vue";
+
+// 新版本的vue3已经不需要了
+// export default {
+//   name: "App",// 组件名称
+//   components: {
+//     Person, // 注册组件
+//   },
+// }
+
 const greetMsg = ref("");
 const name = ref("");
 
@@ -65,8 +75,6 @@ invoke("my_async_custom_command", { number: 10 })
   })
   .catch((err) => { console.error(err) })
 
-
-
 async function greet() {
   // Learn more about Tauri commands at https://v1.tauri.app/v1/guides/features/command
   greetMsg.value = await invoke("greet", { name: name.value });
@@ -74,6 +82,10 @@ async function greet() {
 </script>
 
 <template>
+  <div class="app">
+    <h3>vue3+ts learn</h3>
+    <Person />
+  </div>
   <main class="container">
     <h1>Tauri + Vue</h1>
     <div class="row">
