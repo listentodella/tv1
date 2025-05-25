@@ -66,10 +66,15 @@ invoke("cmd_return_this_error", { num: 2 })
 // 但是tauri::{AppHandle, Window, State} 这两个参数会被自动注入?
 // 所以只需要传入 number 参数即可
 
+// interface也可以, 但是含义与type完全不同
+// interface CustomResponse {
+//   message: string;
+//   other_val: number;
+// }
 type CustomResponse = {
   message: string;
   other_val: number;
-};
+}
 // invoke("my_async_custom_command", { number: 10 }).then((ret:any) => { // 这会失去TS类型检查的意义, 并非最佳实践
 // invoke的默认返回类型是 Promise<any>, 但是我们可以使用泛型来指定返回值的类型
 invoke<CustomResponse>("my_async_custom_command", { number: 10 }).then((ret) => { // 充分利用TS类型检查:)
@@ -103,8 +108,11 @@ async function greet() {
       <a href="https://cn.vuejs.org/guide/introduction.html" target="_blank">
         <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
+      <a href="https://wangdoc.com/typescript/" target="_blank">
+        <img src="./assets/typescript.svg" class="logo ts" alt="TS logo" />
+      </a>
     </div>
-    <p>Click Tauri or Vue logos for tutorials</p>
+    <p>Click logos for tutorials</p>
 
     <form class="row" @submit.prevent="greet">
       <input id="greet-input" v-model="name" placeholder="Enter a name..." />
