@@ -7,6 +7,10 @@
         <hr>
         <h3>Sum = {{ sum }}</h3>
         <button @click="changeSum">点我sum+1</button>
+        <hr>
+        <h3>Person: {{ name }} - {{ age }}</h3>
+        <button @click="changeName">修改名字</button>
+        <button @click="changeAge">修改年龄</button>
     </div>
 </template>
 
@@ -19,7 +23,7 @@ export default {
 </script> -->
 
 <script setup lang="ts" setup_name="Person">
-import { ref, reactive } from "vue";
+import { ref, reactive, toRefs } from "vue";
 /* ref 与 reactive 
 区别:
     - ref 创建的变量必须使用 .value 访问, 但是可以完整替换(可以使用 vue official 插件auto-insert自动添加 .value)
@@ -59,6 +63,25 @@ function changeSum() {
     sum.value += 1
     console.log("sum changed to", sum.value)
 }
+
+let person = reactive({
+    name: "zhangsan",
+    age: 18
+})
+// 只有通过 toRefs() 解构, 才能获取到响应式数据
+// 每个成员都相当于用 ref() 包裹了一下, 而且源数据也会更新
+// 否则只是相当于定义了一个全新的普通变量, 页面上不会更新
+// toRef() 相当于阉割版的 toRefs(), 只能一个个成员解构
+let {name, age } = toRefs(person)
+function changeName() {
+    name.value += "~"
+    console.log(name.value, person.name);
+}
+function changeAge() {
+    age.value += 1
+    console.log(age.value, person.age);
+}
+
 
 </script>
 
