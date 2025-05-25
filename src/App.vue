@@ -60,13 +60,21 @@ invoke("cmd_return_this_error", { num: 2 })
 //     app_handle: tauri::AppHandle,
 //     window: tauri::Window,
 //     number: usize,
-//     my_tauri_state: tauri::State<'_, MyTauriState>,
+//     my_tauri_state: tauri::State<'_, MyTauriState>
+// ) -> Result<struct CustomResponse {
+//            message: String,other_val: usize, }, String>
 // 但是tauri::{AppHandle, Window, State} 这两个参数会被自动注入?
 // 所以只需要传入 number 参数即可
-invoke("my_async_custom_command", { number: 10 })
+
+type CustomResponse = {
+  message: string;
+  other_val: number;
+};
+// invoke("my_async_custom_command", { number: 10 }).then((ret:any) => { // 这会失去TS类型检查的意义, 并非最佳实践
+// invoke的默认返回类型是 Promise<any>, 但是我们可以使用泛型来指定返回值的类型
+invoke<CustomResponse>("my_async_custom_command", { number: 10 }).then((ret) => { // 充分利用TS类型检查:)
   // 返回值直接打印即可
   // 但是也可以将值取出, 这样方便后续提取另作他用
-  .then((ret) => {
     console.log(ret);
     let message = ret.message;
     let val = ret.other_val;

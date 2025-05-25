@@ -69,5 +69,7 @@ function changeSum() {
         box-shadow: 0 0 10px;
         border-radius: 10px;
         padding: 20px;
+        /* margin-trim: 5px; */
+        /* margin-inline: 5px; */
     }
 </style>
