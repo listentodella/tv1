@@ -11,6 +11,18 @@
         <h3>Person: {{ name }} - {{ age }}</h3>
         <button @click="changeName">修改名字</button>
         <button @click="changeAge">修改年龄</button>
+        <hr>
+        <!-- v-model 双向绑定, 变量值可以显示到页面上, 页面上的修改也可以回到变量  -->
+        姓: <input type="text" v-model="firstName" /> <br>
+        名: <input type="text" v-model="lastName" /> <br>
+        <!-- 全名: <span>{{ firstName }} {{ lastName }}</span> <br> -->
+        <!-- 函数不会缓存, 每次调用都是重新计算 -->
+        全名func: <span>{{ fullNameFunc() }}</span> <br>
+        全名func: <span>{{ fullNameFunc() }}</span> <br>
+        <!-- 计算属性有缓存, 只有当依赖的数据发生变化时, 才会重新计算-->
+        全名computed: <span>{{ fullName }}</span> <br>
+        全名computed: <span>{{ fullName }}</span> <br>
+        <button @click="changeFullName">修改全名</button>
     </div>
 </template>
 
@@ -23,7 +35,7 @@ export default {
 </script> -->
 
 <script setup lang="ts" setup_name="Person">
-import { ref, reactive, toRefs } from "vue";
+import { ref, reactive, toRefs, computed } from "vue";
 /* ref 与 reactive 
 区别:
     - ref 创建的变量必须使用 .value 访问, 但是可以完整替换(可以使用 vue official 插件auto-insert自动添加 .value)
@@ -82,6 +94,33 @@ function changeAge() {
     console.log(age.value, person.age);
 }
 
+let firstName = ref("zhang")
+let lastName = ref("san")
+
+function fullNameFunc() {
+    console.log("fullNameFunc called");
+    return firstName.value.slice(0, 1).toUpperCase() + firstName.value.slice(1) + "-" + lastName.value
+}
+
+// 不通过get/set, 则FullName 是只读的, 不能修改
+// let fullName = computed(() => {
+let fullName = computed( {
+    get() {
+        console.log("computed called");
+        return firstName.value.slice(0, 1).toUpperCase() + firstName.value.slice(1) + "-" + lastName.value
+    },
+    set(val) {
+        console.log("computed set called", val);
+        const [str1, str2] = val.split("-")
+        firstName.value = str1
+        lastName.value = str2
+    }
+})
+
+function changeFullName() {
+    // 这将导致对应的set被调用
+    fullName.value = "li-si"
+}
 
 </script>
 
