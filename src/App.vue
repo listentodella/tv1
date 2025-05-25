@@ -2,8 +2,33 @@
 import { ref } from "vue";
 // 这是调用 rust 代码必须得导入
 import { invoke } from "@tauri-apps/api/tauri";
+// 全局事件
+import { emit, listen } from "@tauri-apps/api/event";
+// 特定窗口事件
+import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
+
 
 import Person from "./components/Person.vue";
+
+// 监听 click event并获取一个函数以移除event listener
+// 也可以使用 `once` 函数订阅一个event, 并在触发时自动event listener
+// const unlisten = await listen("click", (event) => {
+//   // event.event 是event名称(当你想用一个回调处理不同类型的event时会很有用)
+//   // event.payload 是event的负载对象
+//   console.log(event);
+//   unlisten()// 取消监听
+// })
+// 携带payload对象,触发 click event
+// emit("click", { theMessage: "Tauri is awesome!" }) // 发送event
+
+// 触发一个仅当前窗口可见的event
+appWindow.emit("event",  {message: "Tauri is awesome in this window only!"})
+// 创建一个新的webview窗口,并触发一个仅对它可见的event
+const webview = new WebviewWindow("window")
+webview.emit("event")
+
+
+
 
 // 新版本的vue3已经不需要了
 // export default {

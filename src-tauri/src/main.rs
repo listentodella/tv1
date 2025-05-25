@@ -117,6 +117,16 @@ async fn my_async_custom_command(
     // 获取app的路径
     let app_dir = app_handle.path_resolver().app_data_dir();
     println!("app dir is {:?}", app_dir);
+
+    app_handle
+        .emit_all(
+            "event-name",
+            Payload {
+                message: "Hello Event from Rust!".into(),
+            },
+        )
+        .unwrap();
+
     // 监听全局快捷键
     use tauri::GlobalShortcutManager;
     let _ = app_handle
@@ -136,8 +146,36 @@ async fn my_async_custom_command(
     }
 }
 
+use tauri::Manager;
+// 负载类型必须实现 Serialize 和 Clone
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+    message: String,
+}
+
 fn main() {
     tauri::Builder::default()
+        .setup(|app| {
+            println!("setup called");
+            // 监听 event-name (全局, 无论其在哪个窗口触发)
+            let id = app.listen_global("event-name", |event| {
+                println!("got event-name with payload: {:?}", event.payload());
+            });
+
+            // 使用 listen_global 返回的 id 取消 listen
+            // App 结构上也暴露了 once_global API可供使用
+            // app.unlisten(id);
+
+            // 在前端的所有webview窗口触发 event-name 事件
+            app.emit_all(
+                "event-name",
+                Payload {
+                    message: "Hello Event from Rust!".into(),
+                },
+            )
+            .unwrap();
+            Ok(())
+        })
         // 这个manage是非常重要的, 否则 命令上无法使用 tauri::State
         .manage(MyTauriState {
             info: "Tauri State Info".into(),
