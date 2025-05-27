@@ -6,6 +6,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { emit, listen } from "@tauri-apps/api/event";
 // 特定窗口事件
 import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
+import { RouterLink, RouterView } from "vue-router";
 
 
 import Person from "./components/Person.vue";
@@ -22,7 +23,7 @@ import Person from "./components/Person.vue";
 // emit("click", { theMessage: "Tauri is awesome!" }) // 发送event
 
 // 触发一个仅当前窗口可见的event
-appWindow.emit("event",  {message: "Tauri is awesome in this window only!"})
+appWindow.emit("event", { message: "Tauri is awesome in this window only!" })
 // 创建一个新的webview窗口,并触发一个仅对它可见的event
 const webview = new WebviewWindow("window")
 webview.emit("event")
@@ -105,12 +106,12 @@ type CustomResponse = {
 invoke<CustomResponse>("my_async_custom_command", { number: 10 }).then((ret) => { // 充分利用TS类型检查:)
   // 返回值直接打印即可
   // 但是也可以将值取出, 这样方便后续提取另作他用
-    console.log(ret);
-    let message = ret.message;
-    let val = ret.other_val;
-    console.warn(message);
-    console.warn(val);
-  })
+  console.log(ret);
+  let message = ret.message;
+  let val = ret.other_val;
+  console.warn(message);
+  console.warn(val);
+})
   .catch((err) => { console.error(err) })
 
 async function greet() {
@@ -120,6 +121,25 @@ async function greet() {
 </script>
 
 <template>
+  <div class="app0">
+    <h2 class="title">Vue Router</h2>
+    <!-- 导航区 -->
+    <div class="navi">
+      <RouterLink to="/home" active-class="active">首页</RouterLink>
+      <RouterLink to="/news" active-class="active">新闻</RouterLink>
+      <RouterLink to="/about" active-class="active">关于</RouterLink>
+    </div>
+    <!-- 展示区 -->
+    <div class="main-content">
+      <!-- 展示区占位即可 -->
+      <RouterView></RouterView>
+      <!-- <router-view></router-view> -->
+    </div>
+  </div>
+
+
+
+
   <div class="app">
     <h3>vue3+ts learn</h3>
     <Person />
