@@ -8,9 +8,6 @@ import { emit, listen } from "@tauri-apps/api/event";
 import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
 import { RouterLink, RouterView } from "vue-router";
 
-
-import Person from "./components/Person.vue";
-
 // 监听 click event并获取一个函数以移除event listener
 // 也可以使用 `once` 函数订阅一个event, 并在触发时自动event listener
 // const unlisten = await listen("click", (event) => {
@@ -121,29 +118,6 @@ async function greet() {
 </script>
 
 <template>
-  <div class="app0">
-    <h2 class="title">Vue Router</h2>
-    <!-- 导航区 -->
-    <div class="navi">
-      <RouterLink to="/home" active-class="active">首页</RouterLink>
-      <RouterLink to="/news" active-class="active">新闻</RouterLink>
-      <RouterLink to="/about" active-class="active">关于</RouterLink>
-    </div>
-    <!-- 展示区 -->
-    <div class="main-content">
-      <!-- 展示区占位即可 -->
-      <RouterView></RouterView>
-      <!-- <router-view></router-view> -->
-    </div>
-  </div>
-
-
-
-
-  <div class="app">
-    <h3>vue3+ts learn</h3>
-    <Person />
-  </div>
   <main class="container">
     <h1>Tauri + Vue</h1>
     <div class="row">
@@ -165,6 +139,26 @@ async function greet() {
     </form>
     <p>{{ greetMsg }}</p>
   </main>
+
+  <div class="app0">
+    <h2 class="title">Vue Router</h2>
+    <!-- 导航区 -->
+    <div class="navi">
+      <!-- 可以直接写路径, 但是一旦路径较深, 就会变得麻烦 -->
+      <!-- <RouterLink :to="{ path: 'home' }" active-class="active">首页</RouterLink> -->
+      <RouterLink to="/home" active-class="active">首页</RouterLink>
+      <!-- 可以通过名字跳转, 但要有name属性 -->
+      <RouterLink :to="{ name: 'news' }" active-class="active">新闻</RouterLink>
+      <RouterLink :to="{ name: 'about' }" active-class="active">关于</RouterLink>
+      <RouterLink :to="{ name: 'person' }" active-class="active">个人</RouterLink>
+    </div>
+    <!-- 展示区 -->
+    <div class="main-content">
+      <!-- 展示区占位即可 -->
+      <RouterView></RouterView>
+      <!-- <router-view></router-view> -->
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -191,8 +185,8 @@ async function greet() {
 
 .container {
   margin: 0;
-  padding-top: 10vh;
-  display: flex;
+  padding-top: 1vh;
+  display: flexbox;
   flex-direction: column;
   justify-content: center;
   text-align: center;
