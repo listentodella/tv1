@@ -6,7 +6,8 @@
             <li v-for="news in newsList" :key="news.id">
                 <!-- <RouterLink to="/news/detail">{{ news.title }}</RouterLink> -->
                 <!-- 命名路由逐渐展现优势, 不需要手动去拼路径名称 -->
-                <RouterLink :to="{ name: 'detail' }">{{ news.title }}</RouterLink>
+                <RouterLink :to="{ name: 'detail', params: { id: news.id, title: news.title, content: news.content } }">
+                    {{ news.title }}</RouterLink>
             </li>
         </ul>
         <!-- 展示区 -->
@@ -39,6 +40,10 @@ const newsList = reactive([
         id: "qwer04",
         title: 'News004',
         content: "This is the content of News004"
+    },
+    {
+        id: "qwer05",
+        title: 'News005 has no Content',
     },
 ])
 

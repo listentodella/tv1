@@ -28,7 +28,8 @@ const router = createRouter({
             children: [
                 {
                     name: "detail",
-                    path: "detail",
+                    // params 形式的传参, ? 代表可选参数
+                    path: "detail/:id/:title/:content?",
                     component: Detail
                 }
             ]
