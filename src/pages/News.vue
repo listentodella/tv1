@@ -7,7 +7,9 @@
                 <!-- <RouterLink to="/news/detail">{{ news.title }}</RouterLink> -->
                 <!-- 命名路由逐渐展现优势, 不需要手动去拼路径名称 -->
                 <RouterLink :to="{ name: 'detail', params: { id: news.id, title: news.title, content: news.content } }">
-                    {{ news.title }}</RouterLink>
+                    <!-- <RouterLink :to="{ name: 'detail', query: { id: news.id, title: news.title, content: news.content } }"> -->
+                    {{ news.title }}
+                </RouterLink>
             </li>
         </ul>
         <!-- 展示区 -->

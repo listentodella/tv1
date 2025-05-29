@@ -29,8 +29,27 @@ const router = createRouter({
                 {
                     name: "detail",
                     // params 形式的传参, ? 代表可选参数
+                    component: Detail,
+                    // 作用：让路由组件更方便的收到参数
+                    // 第一种写法: 将路由收到的所有**params**参数作为props传给路由组件, 不能传query参数
                     path: "detail/:id/:title/:content?",
-                    component: Detail
+                    props: true,
+
+                    // 第二种写法: 函数形式, 自定义props传参, 主要用于传query参数, params也可, 但不如上面简洁
+                    // path: "detail", // 配合传query参数时使用
+                    // props(route) {
+                    //    console.log("query", route.query);
+                    //    return route.query
+                    // }
+                    // path: "detail/:id/:title/:content?",// 配合传params参数时使用
+                    // props(route) {
+                    //    console.log("params", route.params);
+                    //    return route.params
+                    // }
+
+                    // 第三种写法: 对象形式, 自定义props传参
+                    // 但只能写死, 不灵活, 一般用于给路由组件固定传参的场景(因为路由组件没有机会自带参数)
+                    // props {id: '123', title: 'abc', content: 'def'}
                 }
             ]
         },
