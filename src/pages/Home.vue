@@ -8,6 +8,21 @@
 
 
 <script lang="ts" setup name="Home">
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+// 直接拿到router 实例, 即可为所欲为:)
+const router = useRouter();
+
+onMounted(() => {
+    setTimeout(() => {
+        console.log('Welcome to the Home Page');
+        // 在此处编写一段代码, 让路由实现跳转
+        // 编程式路由导航, 即脱离RouerLink实现跳转
+        router.push('/about');// push跳转到about页面, 可以返回上一页
+        // router.replace('/news');// replace跳转到news页面, 不可返回
+    }, 3000);
+});
 
 </script>
 

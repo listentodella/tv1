@@ -6,6 +6,7 @@
             <li v-for="news in newsList" :key="news.id">
                 <!-- <RouterLink to="/news/detail">{{ news.title }}</RouterLink> -->
                 <!-- 命名路由逐渐展现优势, 不需要手动去拼路径名称 -->
+                <button @click="showDetail(news)"> 查看详情 </button>
                 <RouterLink :to="{ name: 'detail', params: { id: news.id, title: news.title, content: news.content } }">
                     <!-- <RouterLink :to="{ name: 'detail', query: { id: news.id, title: news.title, content: news.content } }"> -->
                     {{ news.title }}
@@ -22,6 +23,7 @@
 <script lang="ts" setup name="News">
 import { reactive } from 'vue'
 import { RouterLink, RouterView } from 'vue-router';
+import { useRouter } from 'vue-router';
 const newsList = reactive([
     {
         id: "qwer01",
@@ -48,5 +50,18 @@ const newsList = reactive([
         title: 'News005 has no Content',
     },
 ])
+
+const router = useRouter();
+
+interface NewsItem {
+    id: string;
+    title: string;
+    content?: string;
+}
+// function showDetail(news:any) {
+function showDetail(news: NewsItem) {
+    console.log();
+    router.push({ name: 'detail', params: { id: news.id, title: news.title, content: news.content } });
+}
 
 </script>
