@@ -8,6 +8,12 @@
         <button type="submit">Greet</button>
     </form>
     <p>{{ greetMsg }}</p>
+    <li v-for="cmd in cmdList" :key="cmd.id">
+        <button
+            @click="invoke(cmd.name, cmd.param).then((msg) => console.log(msg)).catch((err) => console.error(err))">{{
+                cmd.desc
+            }}</button>
+    </li>
 </template>
 
 <script lang="ts" setup name="Tauri">
@@ -46,36 +52,6 @@ invoke("cmd_string_arg", { invokeMessage: "Hello!" })
 
 // snake case 风格的传递, rust侧必须用相应的宏修饰
 invoke("cmd_string_arg_snake_case", { invoke_message: "snake_hello" })
-
-// rust侧可以返回值到vue侧
-// 同样要求返回值类型实现 serde::Serialize
-invoke("cmd_return_string").then((msg) => console.log(msg));
-
-// rust侧返回的结果是 Result<T, E> 类型
-// 如果 ok 为 true, msg 就是 T, 如果 ok 为 false, msg 就是 E
-invoke("cmd_return_result", { ok: true })
-    .then((msg) => { console.log(msg) })
-    .catch((err) => { console.error(err) })
-invoke("cmd_return_result", { ok: false })
-    .then((msg) => { console.log(msg) })
-    .catch((err) => { console.error(err) })
-
-invoke("cmd_return_map_err", { ok: true })
-    .then((msg) => { console.log(msg) })
-    .catch((err) => { console.error(err) })
-invoke("cmd_return_map_err", { ok: false })
-    .then((msg) => { console.log(msg) })
-    .catch((err) => { console.error(err) })
-
-invoke("cmd_return_this_error", { num: 0 })
-    .then((msg) => { console.log(msg) })
-    .catch((err) => { console.error(err) })
-invoke("cmd_return_this_error", { num: 1 })
-    .then((msg) => { console.log(msg) })
-    .catch((err) => { console.error(err) })
-invoke("cmd_return_this_error", { num: 2 })
-    .then((msg) => { console.log(msg) })
-    .catch((err) => { console.error(err) })
 
 // 尽管rust侧的函数入参实际更复杂:
 // my_custom_command(
@@ -118,5 +94,26 @@ async function greet() {
     // Learn more about Tauri commands at https://v1.tauri.app/v1/guides/features/command
     greetMsg.value = await invoke("greet", { name: name.value });
 }
+
+const cmdList = [
+    { id: "cmd_001", name: "cmd_no_args", param: {}, desc: "无参调用" },
+    { id: "cmd_002", name: "cmd_string_arg", param: { invokeMessage: "HelloWorld!" }, desc: "带参调用(string)" },
+    { id: "cmd_003", name: "cmd_string_arg_snake_case", param: { invoke_message: "hello_world!" }, desc: "带参调用(snake_case)" },
+
+    // rust侧可以返回值到vue侧
+    // 同样要求返回值类型实现 serde::Serialize
+    { id: "cmd_004", name: "cmd_return_string", param: {}, desc: "返回字符串" },
+
+    // rust侧返回的结果是 Result<T, E> 类型
+    // 如果 ok 为 true, msg 就是 T, 如果 ok 为 false, msg 就是 E
+    { id: "cmd_005", name: "cmd_return_result", param: { ok: true }, desc: "返回Result Ok" },
+    { id: "cmd_006", name: "cmd_return_result", param: { ok: false }, desc: "返回Result Err" },
+    { id: "cmd_007", name: "cmd_return_map_err", param: { ok: true }, desc: "返回自定义错误 Ok" },
+    { id: "cmd_008", name: "cmd_return_map_err", param: { ok: false }, desc: "返回自定义错误 Err" },
+    { id: "cmd_009", name: "cmd_return_this_error", param: { num: 0 }, desc: "返回(thiserror) std err" },
+    { id: "cmd_010", name: "cmd_return_this_error", param: { num: 1 }, desc: "返回(thiserror) DIY err" },
+    { id: "cmd_011", name: "cmd_return_this_error", param: { num: 2 }, desc: "返回(thiserror) Ok" },
+    { id: "cmd_012", name: "my_async_custom_command", param: { number: 10 }, desc: "自定义异步调用" },
+]
 
 </script>
