@@ -4,10 +4,10 @@ import { createRouter, createWebHistory } from "vue-router"
 // import News from "@/pages/News.vue"
 // import About from "@/pages/About.vue"
 import Home from "../pages/Home.vue"
-import News from "../pages/News.vue"
+import Routers from "../pages/Routers.vue"
 import About from "../pages/About.vue"
 import Detail from "../pages/Detail.vue"
-import Person from "../pages/Person.vue"
+import Reactivity from "../pages/Reactivity.vue"
 import Tauri from "../pages/Tauri.vue"
 
 
@@ -30,9 +30,9 @@ const router = createRouter({
             component: Home
         },
         {
-            name: "news",
-            path: "/news",
-            component: News,
+            name: "routers",
+            path: "/routers",
+            component: Routers,
             children: [
                 {
                     name: "detail",
@@ -67,9 +67,9 @@ const router = createRouter({
             component: About
         },
         {
-            name: "person",
-            path: "/person",
-            component: Person
+            name: "reactivity",
+            path: "/reactivity",
+            component: Reactivity
         },
         {
             name: "tauri",

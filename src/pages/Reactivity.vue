@@ -1,5 +1,6 @@
 <template>
-    <div class="person">
+    <h3>ref,reactive,toRefs,computed</h3>
+    <div class="base">
         <h3>Car Info: 1 {{ car.brand }} - ${{ car.price }}w</h3>
         <button @click="changeBrand">修改汽车的品牌</button>
         <button @click="changePrice">修改汽车的价格</button>
@@ -84,7 +85,7 @@ let person = reactive({
 // 每个成员都相当于用 ref() 包裹了一下, 而且源数据也会更新
 // 否则只是相当于定义了一个全新的普通变量, 页面上不会更新
 // toRef() 相当于阉割版的 toRefs(), 只能一个个成员解构
-let {name, age } = toRefs(person)
+let { name, age } = toRefs(person)
 function changeName() {
     name.value += "~"
     console.log(name.value, person.name);
@@ -104,7 +105,7 @@ function fullNameFunc() {
 
 // 不通过get/set, 则FullName 是只读的, 不能修改
 // let fullName = computed(() => {
-let fullName = computed( {
+let fullName = computed({
     get() {
         console.log("computed called");
         return firstName.value.slice(0, 1).toUpperCase() + firstName.value.slice(1) + "-" + lastName.value
@@ -125,13 +126,13 @@ function changeFullName() {
 </script>
 
 <style scoped>
-    .person {
-        /* background-color: #ddd; */
-        background-color: skyblue;
-        box-shadow: 0 0 10px;
-        border-radius: 10px;
-        padding: 20px;
-        /* margin-trim: 5px; */
-        /* margin-inline: 5px; */
-    }
+.base {
+    /* background-color: #ddd; */
+    background-color: skyblue;
+    box-shadow: 0 0 10px;
+    border-radius: 10px;
+    padding: 20px;
+    /* margin-trim: 5px; */
+    /* margin-inline: 5px; */
+}
 </style>

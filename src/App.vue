@@ -36,10 +36,10 @@ import { RouterLink, RouterView } from "vue-router";
       <!-- <RouterLink :to="{ path: 'home' }" active-class="active">首页</RouterLink> -->
       <RouterLink to="/home" active-class="active">首页</RouterLink>
       <!-- 可以通过名字跳转, 但要有name属性 -->
-      <RouterLink :to="{ name: 'news' }" active-class="active">新闻</RouterLink>
-      <RouterLink :to="{ name: 'about' }" active-class="active">关于</RouterLink>
-      <RouterLink :to="{ name: 'person' }" active-class="active">个人</RouterLink>
+      <RouterLink :to="{ name: 'routers' }" active-class="active">嵌套路由</RouterLink>
+      <RouterLink :to="{ name: 'reactivity' }" active-class="active">响应式</RouterLink>
       <RouterLink :to="{ name: 'tauri' }" active-class="active">Tauri</RouterLink>
+      <RouterLink :to="{ name: 'about' }" active-class="active">关于</RouterLink>
     </div>
     <!-- 展示区 -->
     <div class="main-content">
