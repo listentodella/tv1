@@ -8,6 +8,7 @@ import News from "../pages/News.vue"
 import About from "../pages/About.vue"
 import Detail from "../pages/Detail.vue"
 import Person from "../pages/Person.vue"
+import Tauri from "../pages/Tauri.vue"
 
 
 // 2. 创建 router
@@ -69,7 +70,12 @@ const router = createRouter({
             name: "person",
             path: "/person",
             component: Person
-        }
+        },
+        {
+            name: "tauri",
+            path: "/tauri",
+            component: Tauri
+        },
     ]
 })
 
