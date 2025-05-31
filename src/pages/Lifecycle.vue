@@ -3,16 +3,16 @@
         <h1>Lifecycle</h1>
         <h2>当前计数: {{ sum }}</h2>
         <button @click="changeSum">点我+1</button>
-
-        <body>
-            <p>vue3生命周期整体分为四个阶段:创建、挂载、更新、销毁,每个阶段都有两个钩子,一前一后</p>
-            <b>创建阶段: setup </b> <br />
-            <b>挂载阶段: onBeforeMount、onMounted </b><br />
-            <b>更新阶段: onBeforeUpdate、onUpdated </b><br />
-            <b>卸载阶段: onBeforeUnmount、onUnmounted </b><br />
-            <b>常用的hooks: onMounted、onUpdated、onBeforeUnmount </b>
-        </body>
     </div>
+
+    <body>
+        <p>vue3生命周期整体分为四个阶段:创建、挂载、更新、销毁,每个阶段都有两个钩子,一前一后</p>
+        <b>创建阶段: setup </b> <br />
+        <b>挂载阶段: onBeforeMount、onMounted </b><br />
+        <b>更新阶段: onBeforeUpdate、onUpdated </b><br />
+        <b>卸载阶段: onBeforeUnmount、onUnmounted </b><br />
+        <b>常用的hooks: onMounted、onUpdated、onBeforeUnmount </b>
+    </body>
 </template>
 
 <script lang="ts" setup name="Lifecycle">

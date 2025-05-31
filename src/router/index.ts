@@ -11,6 +11,7 @@ import Reactivity from "../pages/Reactivity.vue"
 import Tauri from "../pages/Tauri.vue"
 import Lifecycle from "../pages/Lifecycle.vue"
 import DiyHook from "../pages/DiyHook.vue"
+import Watch from "../pages/Watch.vue"
 
 
 // 2. 创建 router
@@ -88,6 +89,11 @@ const router = createRouter({
             path: "/diyhook",
             component: DiyHook
         },
+        {
+            name: "watch",
+            path: "/watch",
+            component: Watch
+        }
     ]
 })
 
