@@ -17,6 +17,13 @@ const router = createRouter({
     // 有哪些路由规则
     routes: [
         {
+            // 重定向, 不要写name
+            // 可以保证第一次打开页面时所在的页面
+            // 以及其他希望重定向的场景
+            path: "/",
+            redirect: "about"
+        },
+        {
             name: "home",
             path: "/home",
             component: Home
