@@ -10,6 +10,7 @@ import Detail from "../pages/Detail.vue"
 import Reactivity from "../pages/Reactivity.vue"
 import Tauri from "../pages/Tauri.vue"
 import Lifecycle from "../pages/Lifecycle.vue"
+import DiyHook from "../pages/DiyHook.vue"
 
 
 // 2. 创建 router
@@ -81,6 +82,11 @@ const router = createRouter({
             name: "lifecycle",
             path: "/lifecycle",
             component: Lifecycle
+        },
+        {
+            name: "diyhook",
+            path: "/diyhook",
+            component: DiyHook
         },
     ]
 })

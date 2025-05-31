@@ -43,6 +43,7 @@ import { RouterLink, RouterView } from "vue-router";
       <RouterLink :to="{ name: 'reactivity' }" active-class="active">响应式</RouterLink>
       <RouterLink :to="{ name: 'lifecycle' }" active-class="active">生命周期</RouterLink>
       <RouterLink :to="{ name: 'tauri' }" active-class="active">Tauri</RouterLink>
+      <RouterLink :to="{ name: 'diyhook' }" active-class="active">自定义Hook</RouterLink>
       <RouterLink :to="{ name: 'about' }" active-class="active">关于</RouterLink>
     </div>
     <!-- 展示区 -->
