@@ -32,7 +32,6 @@ import { RouterLink, RouterView } from "vue-router";
   </main>
 
   <div class="app0">
-    <h2 class="title">Vue Router</h2>
     <!-- 导航区 -->
     <div class="navi">
       <!-- 可以直接写路径, 但是一旦路径较深, 就会变得麻烦 -->
@@ -58,6 +57,32 @@ import { RouterLink, RouterView } from "vue-router";
 <style scoped>
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #249b73);
+}
+
+.navi {
+  display: flex;
+  gap: 5px;
+  /* 每个链接之间的间距 */
+  padding: 8px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+}
+
+.navi a {
+  text-decoration: none;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.navi a.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.navi a:hover {
+  background-color: #e0e0e0;
 }
 </style>
 
