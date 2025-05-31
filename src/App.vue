@@ -24,6 +24,9 @@ import { RouterLink, RouterView } from "vue-router";
       <a href="https://wangdoc.com/typescript/" target="_blank">
         <img src="./assets/typescript.svg" class="logo ts" alt="TS logo" />
       </a>
+      <a href="https://www.runoob.com/html/html-tutorial.html" target="_blank">
+        <img src="./assets/html5.svg" class="logo html" alt="HTML logo" />
+      </a>
     </div>
     <p>Click logos for tutorials</p>
   </main>
@@ -38,6 +41,7 @@ import { RouterLink, RouterView } from "vue-router";
       <!-- 可以通过名字跳转, 但要有name属性 -->
       <RouterLink :to="{ name: 'routers' }" active-class="active">嵌套路由</RouterLink>
       <RouterLink :to="{ name: 'reactivity' }" active-class="active">响应式</RouterLink>
+      <RouterLink :to="{ name: 'lifecycle' }" active-class="active">生命周期</RouterLink>
       <RouterLink :to="{ name: 'tauri' }" active-class="active">Tauri</RouterLink>
       <RouterLink :to="{ name: 'about' }" active-class="active">关于</RouterLink>
     </div>
