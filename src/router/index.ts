@@ -13,6 +13,11 @@ import Lifecycle from "../pages/Lifecycle.vue"
 import DiyHook from "../pages/DiyHook.vue"
 import Watch from "../pages/Watch.vue"
 
+// import { defineAsyncComponent } from "vue"
+// const Serial = defineAsyncComponent(() => import("../pages/Serial.vue"))
+//const Serial = defineAsyncComponent(() => import("../pages/Serial.vue"))
+// import Serial from "../pages/Serial.vue"
+
 
 // 2. 创建 router
 const router = createRouter({
@@ -93,6 +98,11 @@ const router = createRouter({
             name: "watch",
             path: "/watch",
             component: Watch
+        },
+        {
+            name: "serial",
+            path: "/serial",
+            component: () => import("../pages/Serial.vue")
         }
     ]
 })

@@ -167,6 +167,7 @@ pub fn run() {
             app.global_shortcut().register("CTRL + U")?;
             Ok(())
         })
+        .plugin(tauri_plugin_serialplugin::init())
         // 这个manage是非常重要的, 否则 命令上无法使用 tauri::State
         .manage(MyTauriState {
             info: "Tauri State Info".into(),

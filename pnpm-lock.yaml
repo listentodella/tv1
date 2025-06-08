@@ -17,6 +17,9 @@ importers:
       axios:
         specifier: ^1.9.0
         version: 1.9.0
+      tauri-plugin-serialplugin:
+        specifier: ^2.11.1
+        version: 2.11.1
       vue:
         specifier: ^3.5.13
         version: 3.5.14(typescript@5.6.3)
@@ -626,6 +629,9 @@ packages:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
 
+  tauri-plugin-serialplugin@2.11.1:
+    resolution: {integrity: sha512-y7C3VpsQO/7yukd5i+yUmzsTiGicyevIcAXoVBDiHlpyCpvlfW/c7UuA2I2K94Gtx667HrwUTq10GNGBi0urtg==}
+
   tinyglobby@0.2.13:
     resolution: {integrity: sha512-mEwzpUgrLySlveBwEVDMKk5B57bhLPYovRfPAXD5gA/98Opn0rCDj3GtLwFvCvH5RK9uPCExUROW5NjDwvqkxw==}
     engines: {node: '>=12.0.0'}
@@ -1192,6 +1198,10 @@ snapshots:
       fsevents: 2.3.3
 
   source-map-js@1.2.1: {}
+
+  tauri-plugin-serialplugin@2.11.1:
+    dependencies:
+      '@tauri-apps/api': 2.5.0
 
   tinyglobby@0.2.13:
     dependencies:

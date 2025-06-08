@@ -1,0 +1,113 @@
+<template>
+    <div class="serial">
+        <h1>Serial</h1>
+    </div>
+    <div v-if="imu">
+        <p>Frame ID: {{ imu.frame_id }}</p>
+        <p>Timestamp: {{ imu.timestamp }}</p>
+        <p>Data: {{imu.data.map(n => n.toFixed(3)).join(', ')}}</p>
+    </div>
+    <div v-else>
+        Waiting for IMU data...
+    </div>
+</template>
+
+<script lang="ts" setup name="Serial">
+import { onUnmounted, reactive } from 'vue';
+import { DataBits, FlowControl, Parity, SerialPort, StopBits } from 'tauri-plugin-serialplugin';
+
+let stopSerialLoop = false;
+
+onUnmounted(() => {
+    stopSerialLoop = true;
+});
+
+let imu = reactive({
+    frame_id: 0n,
+    timestamp: 0n,
+    data: [] as number[],
+})
+
+// 启动监听任务（非阻塞, 不会阻塞画面渲染
+startSerialLoop()
+
+
+
+function parseImuData(buffer: Uint8Array) {
+    const view = new DataView(buffer.buffer);
+
+    let offset = 0;
+    // 读取 u64 frame_id
+    const frame_id = view.getBigUint64(offset, true);
+    offset += 8;
+    // 读取 u64 timestamp
+    const timestamp = view.getBigUint64(offset, true);
+    offset += 8;
+    // 读取 f32[7]
+    const data: number[] = [];
+    for (let i = 0; i < 7; i++) {
+        data.push(view.getFloat32(offset, true)); // little-endian
+        offset += 4;
+    }
+
+    return {
+        frame_id,
+        timestamp,
+        data,
+    };
+}
+
+async function startSerialLoop() {
+    const ports = await SerialPort.available_ports()
+    if (Object.keys(ports).length === 0) {
+        console.error("No serial ports found!")
+        return
+    }
+
+    const port = new SerialPort({
+        path: "/dev/cu.usbmodem123456781",
+        baudRate: 921600,
+    })
+
+    try {
+        await port.open()
+        await port.setBaudRate(921600)
+        await port.setDataBits(DataBits.Eight)
+        await port.setFlowControl(FlowControl.None)
+        await port.setParity(Parity.None)
+        await port.setStopBits(StopBits.One)
+
+        console.log("Serial port opened and configured.")
+
+        // 加上这个listen之后, 下面的readBinary得到的内容才符合预期, Why???
+        // Start listening
+        await port.startListening();
+        await port.listen((_data) => {
+            // console.log("==================Received:", data);
+        });
+
+        while (!stopSerialLoop) {
+            try {
+                const data = await port.readBinary({ timeout: 500, size: 48 })
+                if (data.length === 48) {
+                    const parsed = parseImuData(data)
+                    imu.frame_id = parsed.frame_id
+                    imu.timestamp = parsed.timestamp
+                    imu.data = parsed.data
+                    // console.log("IMU:", parsed)
+                }
+            } catch (err) {
+                console.warn("Serial read timeout or error:", err)
+            }
+        }
+
+        await port.close()
+        console.log("Serial port closed.")
+
+    } catch (err) {
+        console.error("Serial error:", err)
+    }
+}
+
+
+</script>

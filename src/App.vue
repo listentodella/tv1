@@ -45,12 +45,21 @@ import { RouterLink, RouterView } from "vue-router";
       <RouterLink :to="{ name: 'diyhook' }" active-class="active">自定义Hook</RouterLink>
       <RouterLink :to="{ name: 'watch' }" active-class="active">Watch</RouterLink>
       <RouterLink :to="{ name: 'about' }" active-class="active">关于</RouterLink>
+      <RouterLink :to="{ name: 'serial' }" active-class="active">serial通信</RouterLink>
     </div>
     <!-- 展示区 -->
     <div class="main-content">
-      <!-- 展示区占位即可 -->
-      <RouterView></RouterView>
-      <!-- <router-view></router-view> -->
+      <!-- Suspense, 这样如果有异步的组件, 就不会白屏或异步相关的异常 -->
+      <Suspense>
+        <template #default>
+          <!-- 展示区占位即可 -->
+          <RouterView></RouterView>
+          <!-- <router-view></router-view> -->
+        </template>
+        <template #fallback>
+          <div class="loading">Loading component...</div>
+        </template>
+      </Suspense>
     </div>
   </div>
 </template>
