@@ -10,111 +10,63 @@
     <div v-else>
         Waiting for IMU data...
     </div>
-    <div ref="accRef" style="width: 100%; height: 300px;"></div>
-    <div ref="gyrRef" style="width: 100%; height: 300px; margin-right: 20px;"></div>
+    <v-chart :option="chartOptions" style="width: 100%; height: 400px;" autoresize />
 </template>
 
 <script lang="ts" setup name="Serial">
-import { onUnmounted, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { onUnmounted, reactive } from 'vue';
 import { DataBits, FlowControl, Parity, SerialPort, StopBits } from 'tauri-plugin-serialplugin';
-import "uplot/dist/uPlot.min.css"
+import VChart from "vue-echarts"
+import { use } from "echarts/core";
+import { LineChart } from "echarts/charts";
+import {
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+    GridComponent,
+} from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
 
-import uPlot, { Options } from 'uplot';
 
-const accRef = ref<HTMLDivElement | null>(null);
-const gyrRef = ref<HTMLDivElement | null>(null);
-let accPlot: uPlot | null = null;
-let gyrPlot: uPlot | null = null;
+use([LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer]);
 
-// const maxPoints = 100000;
-const maxPoints = 1000;
-const accX: number[] = [];
-const accY: number[] = [];
-const accZ: number[] = [];
-const gyrX: number[] = [];
-const gyrY: number[] = [];
-const gyrZ: number[] = [];
-const timestamps: number[] = [];
+const chartOptions = reactive({
+    title: { text: 'IMU实时三轴数据' },
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Acc X', 'Acc Y', 'Acc Z', 'Gyro X', 'Gyro Y', 'Gyro Z'] },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: { type: 'category', boundaryGap: false, data: [] as string[] },
+    yAxis: { type: 'value' },
+    series: [
+        { name: 'Acc X', type: 'line', data: [] as number[] },
+        { name: 'Acc Y', type: 'line', data: [] as number[] },
+        { name: 'Acc Z', type: 'line', data: [] as number[] },
+        { name: 'Gyro X', type: 'line', data: [] as number[] },
+        { name: 'Gyro Y', type: 'line', data: [] as number[] },
+        { name: 'Gyro Z', type: 'line', data: [] as number[] },
+    ]
+});
 
-function addIMUData(timestamp: number, acc: number[], gyr: number[]) {
-    timestamps.push(timestamp);
-    accX.push(acc[0]);
-    accY.push(acc[1]);
-    accZ.push(acc[2]);
-    gyrX.push(gyr[0]);
-    gyrY.push(gyr[1]);
-    gyrZ.push(gyr[2]);
+const maxPoints = 1000; // 最大显示数据点数
 
-    if (timestamps.length > maxPoints) {
-        timestamps.shift();
-        accX.shift();
-        accY.shift();
-        accZ.shift();
-        gyrX.shift();
-        gyrY.shift();
-        gyrZ.shift();
+function updateChart(imuData: number[]) {
+    const timestamp = new Date().toLocaleTimeString();
+
+    // x轴时间标签
+    chartOptions.xAxis.data.push(timestamp);
+    if (chartOptions.xAxis.data.length > maxPoints) {
+        chartOptions.xAxis.data.shift();
     }
 
-    if (accPlot) {
-        accPlot.setData([timestamps, accX, accY, accZ]);
-    }
-
-    if (gyrPlot) {
-        gyrPlot.setData([timestamps, gyrX, gyrY, gyrZ]);
+    // 更新每个series数据
+    for (let i = 0; i < 6; i++) {
+        chartOptions.series[i].data.push(imuData[i]);
+        if (chartOptions.series[i].data.length > maxPoints) {
+            chartOptions.series[i].data.shift();
+        }
     }
 }
 
-const accOptions: Options = {
-    width: 600,
-    height: 300,
-    title: "Accelerometer (m/s²)",
-    series: [
-        {}, // 时间轴
-        { label: 'Acc X', stroke: 'red' },
-        { label: 'Acc Y', stroke: 'green' },
-        { label: 'Acc Z', stroke: 'blue' }
-    ],
-    scales: {
-        x: { time: false },
-        y: { auto: true },// auto scale
-    },
-};
-
-const gyrOptions: Options = {
-    width: 600,
-    height: 300,
-    title: "Gyroscope (deg/s)",
-    series: [
-        {}, // 时间轴
-        // { label: 'Gyr X', stroke: 'orange' },
-        // { label: 'Gyr Y', stroke: 'purple' },
-        // { label: 'Gyr Z', stroke: 'brown' }
-        { label: 'Gyr X', stroke: 'red' },
-        { label: 'Gyr Y', stroke: 'green' },
-        { label: 'Gyr Z', stroke: 'blue' }
-    ],
-    scales: {
-        x: { time: false },
-        y: { auto: true },
-    },
-};
-
-
-onMounted(() => {
-    if (accRef.value) {
-        accPlot = new uPlot(accOptions, [timestamps, accX, accY, accZ], accRef.value);
-    }
-    if (gyrRef.value) {
-        gyrPlot = new uPlot(gyrOptions, [timestamps, gyrX, gyrY, gyrZ], gyrRef.value);
-    }
-});
-
-onBeforeUnmount(() => {
-    accPlot?.destroy();
-    gyrPlot?.destroy();
-    accPlot = null;
-    gyrPlot = null;
-});
 
 let stopSerialLoop = false;
 
@@ -194,7 +146,7 @@ async function startSerialLoop() {
                     imu.timestamp = parsed.timestamp
                     imu.data = parsed.data
                     // console.log("IMU:", parsed)
-                    addIMUData(Number(parsed.timestamp), parsed.data.slice(0, 3), parsed.data.slice(3, 6))
+                    updateChart(parsed.data)
                 }
             } catch (err) {
                 console.warn("Serial read timeout or error:", err)
@@ -211,3 +163,11 @@ async function startSerialLoop() {
 
 
 </script>
+
+
+<style scoped>
+.chart {
+    width: 100%;
+    height: 400px;
+}
+</style>
